@@ -31,3 +31,6 @@ C:\Users\jsilva\Desktop\Projetos\order-management-api\obj\Debug\net6.0\refint\or
 C:\Users\jsilva\Desktop\Projetos\order-management-api\obj\Debug\net6.0\order-management-api.pdb
 C:\Users\jsilva\Desktop\Projetos\order-management-api\obj\Debug\net6.0\order-management-api.genruntimeconfig.cache
 C:\Users\jsilva\Desktop\Projetos\order-management-api\obj\Debug\net6.0\ref\order-management-api.dll
+C:\Users\jsilva\Desktop\Projetos\order-management-api\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.dll
+C:\Users\jsilva\Desktop\Projetos\order-management-api\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+C:\Users\jsilva\Desktop\Projetos\order-management-api\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.InMemory.dll
