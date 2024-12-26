@@ -1,61 +1,86 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 [ApiController]
 [Route("api/[controller]")]
 public class PedidoController : ControllerBase
 {
-    private readonly PedidoDbContext _context;
+    private readonly IPedidoService _pedidoService;
 
-    public PedidoController(PedidoDbContext context)
+    public PedidoController(IPedidoService pedidoService)
     {
-        _context = context;
+        _pedidoService = pedidoService;
     }
 
     [HttpGet("{codigo}")]
     public async Task<IActionResult> GetPedido(string codigo)
     {
-        var pedido = await _context.Pedidos.Include(p => p.Itens).FirstOrDefaultAsync(p => p.Codigo == codigo);
-        if (pedido == null) return NotFound(new { status = "CODIGO_PEDIDO_INVALIDO" });
+        try
+        {
+            var pedido = await _pedidoService.GetByCodigoAsync(codigo);
+            if (pedido == null)
+            {
+                return NotFound(new { status = "CODIGO_PEDIDO_INVALIDO" });
+            }
 
-        return Ok(pedido);
+            return Ok(pedido);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new { error = e.Message });
+        }
     }
 
     [HttpPost]
     public async Task<IActionResult> CreatePedido([FromBody] Pedido pedido)
     {
-        if (_context.Pedidos.Any(p => p.Codigo == pedido.Codigo))
+        try
         {
-            return BadRequest(new { status = "CODIGO_PEDIDO_DUPLICADO" });
+            var novoPedido = await _pedidoService.CreatePedidoAsync(pedido);
+            return CreatedAtAction(nameof(GetPedido), new { codigo = novoPedido.Codigo }, novoPedido);
         }
-
-        _context.Pedidos.Add(pedido);
-        await _context.SaveChangesAsync();
-
-        return CreatedAtAction(nameof(GetPedido), new { codigo = pedido.Codigo }, pedido);
+        catch (InvalidOperationException e)
+        {
+            return BadRequest(new { status = e.Message });
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new { error = e.Message });
+        }
     }
 
     [HttpPut("{codigo}")]
     public async Task<IActionResult> UpdatePedido(string codigo, [FromBody] Pedido updatedPedido)
     {
-        var pedido = await _context.Pedidos.Include(p => p.Itens).FirstOrDefaultAsync(p => p.Codigo == codigo);
-        if (pedido == null) return NotFound(new { status = "CODIGO_PEDIDO_INVALIDO" });
-
-        pedido.Itens = updatedPedido.Itens;
-        await _context.SaveChangesAsync();
-
-        return NoContent();
+        try
+        {
+            await _pedidoService.UpdatePedidoAsync(codigo, updatedPedido);
+            return NoContent();
+        }
+        catch (KeyNotFoundException e)
+        {
+            return NotFound(new { status = e.Message });
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new { error = e.Message });
+        }
     }
 
     [HttpDelete("{codigo}")]
     public async Task<IActionResult> DeletePedido(string codigo)
     {
-        var pedido = await _context.Pedidos.Include(p => p.Itens).FirstOrDefaultAsync(p => p.Codigo == codigo);
-        if (pedido == null) return NotFound(new { status = "CODIGO_PEDIDO_INVALIDO" });
-
-        _context.Pedidos.Remove(pedido);
-        await _context.SaveChangesAsync();
-
-        return NoContent();
+        try
+        {
+            await _pedidoService.DeletePedidoAsync(codigo);
+            return NoContent();
+        }
+        catch (KeyNotFoundException e)
+        {
+            return NotFound(new { status = e.Message });
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new { error = e.Message });
+        }
     }
 }

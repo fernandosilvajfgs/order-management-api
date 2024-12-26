@@ -12,6 +12,11 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<PedidoDbContext>(options =>
     options.UseInMemoryDatabase("PedidoDB"));
 
+builder.Services.AddScoped<IPedidoRepository, PedidoRepository>();
+
+builder.Services.AddScoped<IPedidoService, PedidoService>();
+builder.Services.AddScoped<IStatusService, StatusService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
