@@ -13,6 +13,30 @@ public class PedidoServiceTests
     }
 
     [Fact]
+    public async Task GetAllAsync_ReturnsAllPedidos()
+    {
+        // Arrange
+        var pedidos = new List<Pedido>
+    {
+        new Pedido { Codigo = "PED-001", Itens = new List<Item>() },
+        new Pedido { Codigo = "PED-002", Itens = new List<Item>() }
+    };
+
+        _repoMock
+            .Setup(r => r.GetAllAsync())
+            .ReturnsAsync(pedidos);
+
+        // Act
+        var result = await _service.GetAllAsync();
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(2, result.Count);
+        Assert.Contains(result, p => p.Codigo == "PED-001");
+        Assert.Contains(result, p => p.Codigo == "PED-002");
+    }
+
+    [Fact]
     public async Task CreatePedidoAsync_WhenCodigoDuplicado_ThrowsInvalidOperationException()
     {
         // Arrange

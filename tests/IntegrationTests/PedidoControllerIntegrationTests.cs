@@ -1,4 +1,3 @@
-// Ensure you have the necessary using directives
 using Xunit;
 using System.Net;
 using System.Text;
@@ -13,6 +12,51 @@ public class PedidoControllerIntegrationTests
     public PedidoControllerIntegrationTests(WebApplicationFactory<Program> factory)
     {
         _client = factory.CreateClient();
+    }
+
+    [Fact]
+    public async Task GetAllPedidos_ReturnsListOfPedidos()
+    {
+        // Arrange
+        var pedido1 = new CreatePedidoDto
+        {
+            Codigo = "PED-001",
+            Itens = new List<ItemDto>
+        {
+            new ItemDto { Descricao = "Item A", PrecoUnitario = 10, Qtd = 1 }
+        }
+        };
+
+        var pedido2 = new CreatePedidoDto
+        {
+            Codigo = "PED-002",
+            Itens = new List<ItemDto>
+        {
+            new ItemDto { Descricao = "Item B", PrecoUnitario = 20, Qtd = 2 }
+        }
+        };
+
+        var jsonPedido1 = JsonSerializer.Serialize(pedido1);
+        var contentPedido1 = new StringContent(jsonPedido1, Encoding.UTF8, "application/json");
+        await _client.PostAsync("/api/pedido", contentPedido1);
+
+        var jsonPedido2 = JsonSerializer.Serialize(pedido2);
+        var contentPedido2 = new StringContent(jsonPedido2, Encoding.UTF8, "application/json");
+        await _client.PostAsync("/api/pedido", contentPedido2);
+
+        // Act
+        var response = await _client.GetAsync("/api/pedido");
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+        var responseBody = await response.Content.ReadAsStringAsync();
+        var pedidos = JsonSerializer.Deserialize<List<PedidoResponseDto>>(responseBody);
+
+        Assert.NotNull(pedidos);
+        Assert.Equal(2, pedidos.Count);
+        Assert.Contains(pedidos, p => p.Codigo == "PED-001");
+        Assert.Contains(pedidos, p => p.Codigo == "PED-002");
     }
 
     [Fact]

@@ -78,7 +78,7 @@ public class StatusServiceTests
             Codigo = "XYZ",
             Itens = new List<Item>
             {
-                new Item { Descricao = "Item1", PrecoUnitario = 10, Qtd = 2 } // totalValue=20, totalItems=2
+                new Item { Descricao = "Item1", PrecoUnitario = 10, Qtd = 2 }
             }
         };
         _repoMock
@@ -111,7 +111,7 @@ public class StatusServiceTests
             Codigo = "XYZ",
             Itens = new List<Item>
             {
-                new Item { Descricao = "Item1", PrecoUnitario = 10, Qtd = 2 } // totalValue=20
+                new Item { Descricao = "Item1", PrecoUnitario = 10, Qtd = 2 }
             }
         };
         _repoMock
@@ -123,7 +123,7 @@ public class StatusServiceTests
             Pedido = "XYZ",
             Status = "APROVADO",
             ItensAprovados = 2,
-            ValorAprovado = 15 // < 20
+            ValorAprovado = 15
         };
 
         // Act
@@ -143,7 +143,7 @@ public class StatusServiceTests
             Codigo = "XYZ",
             Itens = new List<Item>
             {
-                new Item { Descricao = "Item1", PrecoUnitario = 10, Qtd = 2 } // totalItems=2
+                new Item { Descricao = "Item1", PrecoUnitario = 10, Qtd = 2 }
             }
         };
         _repoMock
@@ -154,7 +154,7 @@ public class StatusServiceTests
         {
             Pedido = "XYZ",
             Status = "APROVADO",
-            ItensAprovados = 3, // > 2
+            ItensAprovados = 3,
             ValorAprovado = 20
         };
 
