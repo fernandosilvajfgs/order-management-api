@@ -4,5 +4,5 @@ public class PedidoDbContext : DbContext
 {
     public PedidoDbContext(DbContextOptions<PedidoDbContext> options) : base(options) { }
 
-    public DbSet<Pedido> Pedidos { get; set; }
+    public DbSet<Pedido> Pedidos { get; set; } = null!;
 }
