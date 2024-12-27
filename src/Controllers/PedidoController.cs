@@ -1,14 +1,18 @@
+// Controllers/PedidoController.cs
 using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
 
 [ApiController]
 [Route("api/[controller]")]
 public class PedidoController : ControllerBase
 {
     private readonly IPedidoService _pedidoService;
+    private readonly IMapper _mapper;
 
-    public PedidoController(IPedidoService pedidoService)
+    public PedidoController(IPedidoService pedidoService, IMapper mapper)
     {
         _pedidoService = pedidoService;
+        _mapper = mapper;
     }
 
     [HttpGet("{codigo}")]
@@ -22,7 +26,8 @@ public class PedidoController : ControllerBase
                 return NotFound(new { status = "CODIGO_PEDIDO_INVALIDO" });
             }
 
-            return Ok(pedido);
+            var pedidoDto = _mapper.Map<PedidoResponseDto>(pedido);
+            return Ok(pedidoDto);
         }
         catch (Exception e)
         {
@@ -31,12 +36,14 @@ public class PedidoController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreatePedido([FromBody] Pedido pedido)
+    public async Task<IActionResult> CreatePedido([FromBody] CreatePedidoDto createPedidoDto)
     {
         try
         {
+            var pedido = _mapper.Map<Pedido>(createPedidoDto);
             var novoPedido = await _pedidoService.CreatePedidoAsync(pedido);
-            return CreatedAtAction(nameof(GetPedido), new { codigo = novoPedido.Codigo }, novoPedido);
+            var pedidoResponseDto = _mapper.Map<PedidoResponseDto>(novoPedido);
+            return CreatedAtAction(nameof(GetPedido), new { codigo = novoPedido.Codigo }, pedidoResponseDto);
         }
         catch (InvalidOperationException e)
         {
@@ -49,10 +56,11 @@ public class PedidoController : ControllerBase
     }
 
     [HttpPut("{codigo}")]
-    public async Task<IActionResult> UpdatePedido(string codigo, [FromBody] Pedido updatedPedido)
+    public async Task<IActionResult> UpdatePedido(string codigo, [FromBody] UpdatePedidoDto updatePedidoDto)
     {
         try
         {
+            var updatedPedido = _mapper.Map<Pedido>(updatePedidoDto);
             await _pedidoService.UpdatePedidoAsync(codigo, updatedPedido);
             return NoContent();
         }

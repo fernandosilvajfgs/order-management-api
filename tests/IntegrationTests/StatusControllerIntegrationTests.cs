@@ -18,12 +18,12 @@ public class StatusControllerIntegrationTests
     public async Task ChangeStatus_QuandoNaoExiste_RetornaNotFound()
     {
         // Arrange
-        var request = new
+        var request = new StatusRequestDto
         {
-            status = "APROVADO",
-            itensAprovados = 3,
-            valorAprovado = 20,
-            pedido = "NAO_EXISTE"
+            Status = "APROVADO",
+            ItensAprovados = 3,
+            ValorAprovado = 20,
+            Pedido = "NAO_EXISTE"
         };
 
         var jsonBody = JsonSerializer.Serialize(request);
@@ -42,12 +42,12 @@ public class StatusControllerIntegrationTests
     public async Task ChangeStatus_QuandoReprovado_DeveRetornarReprovado()
     {
         // Arrange
-        var pedido = new
+        var pedido = new CreatePedidoDto
         {
             Codigo = "TESTE-REPROVADO",
-            Itens = new[]
+            Itens = new List<ItemDto>
             {
-                new { Descricao = "Item A", PrecoUnitario = 10, Qtd = 1 },
+                new ItemDto { Descricao = "Item A", PrecoUnitario = 10, Qtd = 1 },
             }
         };
 
@@ -55,12 +55,12 @@ public class StatusControllerIntegrationTests
         var contentPedido = new StringContent(jsonPedido, Encoding.UTF8, "application/json");
         await _client.PostAsync("/api/pedido", contentPedido);
 
-        var request = new
+        var request = new StatusRequestDto
         {
-            status = "REPROVADO",
-            itensAprovados = 0,
-            valorAprovado = 0,
-            pedido = "TESTE-REPROVADO"
+            Status = "REPROVADO",
+            ItensAprovados = 0,
+            ValorAprovado = 0,
+            Pedido = "TESTE-REPROVADO"
         };
 
         var jsonStatus = JsonSerializer.Serialize(request);
@@ -80,12 +80,12 @@ public class StatusControllerIntegrationTests
     public async Task ChangeStatus_QuandoAprovadoValorMenor_DeveRetornarAprovadoValorAMenor()
     {
         // Arrange
-        var pedido = new
+        var pedido = new CreatePedidoDto
         {
             Codigo = "TESTE-APROVADO",
-            Itens = new[]
+            Itens = new List<ItemDto>
             {
-                new { Descricao = "Item A", PrecoUnitario = 10, Qtd = 2 }
+                new ItemDto { Descricao = "Item A", PrecoUnitario = 10, Qtd = 2 }
             }
         };
 
@@ -93,12 +93,12 @@ public class StatusControllerIntegrationTests
         var contentPedido = new StringContent(jsonPedido, Encoding.UTF8, "application/json");
         await _client.PostAsync("/api/pedido", contentPedido);
 
-        var request = new
+        var request = new StatusRequestDto
         {
-            status = "APROVADO",
-            itensAprovados = 2,
-            valorAprovado = 10,
-            pedido = "TESTE-APROVADO"
+            Status = "APROVADO",
+            ItensAprovados = 2,
+            ValorAprovado = 10,
+            Pedido = "TESTE-APROVADO"
         };
 
         var jsonStatus = JsonSerializer.Serialize(request);

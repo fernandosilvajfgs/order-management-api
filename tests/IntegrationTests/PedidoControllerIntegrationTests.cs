@@ -1,3 +1,4 @@
+// Ensure you have the necessary using directives
 using Xunit;
 using System.Net;
 using System.Text;
@@ -18,13 +19,13 @@ public class PedidoControllerIntegrationTests
     public async Task PostPedido_ComPayloadValido_RetornaCreated()
     {
         // Arrange
-        var novoPedido = new
+        var novoPedido = new CreatePedidoDto
         {
             Codigo = "INT-001",
-            Itens = new[]
+            Itens = new List<ItemDto>
             {
-                new { Descricao = "Item A", PrecoUnitario = 10, Qtd = 1 },
-                new { Descricao = "Item B", PrecoUnitario = 5,  Qtd = 2 }
+                new ItemDto { Descricao = "Item A", PrecoUnitario = 10, Qtd = 1 },
+                new ItemDto { Descricao = "Item B", PrecoUnitario = 5,  Qtd = 2 }
             }
         };
 
@@ -59,12 +60,13 @@ public class PedidoControllerIntegrationTests
     [Fact]
     public async Task PostPedido_QuandoDuplicado_RetornaBadRequest()
     {
-        var pedido = new
+        // Arrange
+        var pedido = new CreatePedidoDto
         {
             Codigo = "DUP-001",
-            Itens = new[]
+            Itens = new List<ItemDto>
             {
-                new { Descricao = "Item A", PrecoUnitario = 10, Qtd = 1 }
+                new ItemDto { Descricao = "Item A", PrecoUnitario = 10, Qtd = 1 }
             }
         };
 
@@ -72,8 +74,10 @@ public class PedidoControllerIntegrationTests
         var contentPedido = new StringContent(jsonPedido, Encoding.UTF8, "application/json");
         await _client.PostAsync("/api/pedido", contentPedido);
 
+        // Act
         var response = await _client.PostAsync("/api/pedido", contentPedido);
 
+        // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
         var responseBody = await response.Content.ReadAsStringAsync();

@@ -1,8 +1,8 @@
 using FluentValidation;
 
-public class PedidoValidator : AbstractValidator<Pedido>
+public class CreatePedidoDtoValidator : AbstractValidator<CreatePedidoDto>
 {
-    public PedidoValidator()
+    public CreatePedidoDtoValidator()
     {
         RuleFor(p => p.Codigo)
             .NotEmpty()
@@ -13,6 +13,6 @@ public class PedidoValidator : AbstractValidator<Pedido>
             .NotEmpty()
             .WithMessage("O pedido precisa de ter pelo menos 1 item.");
 
-        RuleForEach(p => p.Itens).SetValidator(new ItemValidator());
+        RuleForEach(p => p.Itens).SetValidator(new ItemDtoValidator());
     }
 }

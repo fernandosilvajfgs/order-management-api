@@ -1,8 +1,8 @@
 using FluentValidation;
 
-public class StatusRequestValidator : AbstractValidator<StatusRequest>
+public class StatusRequestDtoValidator : AbstractValidator<StatusRequestDto>
 {
-    public StatusRequestValidator()
+    public StatusRequestDtoValidator()
     {
         RuleFor(s => s.Status)
             .NotEmpty()

@@ -1,8 +1,8 @@
 using FluentValidation;
 
-public class ItemValidator : AbstractValidator<Item>
+public class ItemDtoValidator : AbstractValidator<ItemDto>
 {
-    public ItemValidator()
+    public ItemDtoValidator()
     {
         RuleFor(i => i.Descricao)
             .NotEmpty()
