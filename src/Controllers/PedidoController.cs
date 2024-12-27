@@ -1,4 +1,3 @@
-// Controllers/PedidoController.cs
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 
@@ -13,6 +12,21 @@ public class PedidoController : ControllerBase
     {
         _pedidoService = pedidoService;
         _mapper = mapper;
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAllPedidos()
+    {
+        try
+        {
+            var pedidos = await _pedidoService.GetAllAsync();
+            var pedidoDtos = _mapper.Map<List<PedidoResponseDto>>(pedidos);
+            return Ok(pedidoDtos);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(new { error = e.Message });
+        }
     }
 
     [HttpGet("{codigo}")]

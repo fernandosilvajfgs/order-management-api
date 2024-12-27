@@ -1,4 +1,3 @@
-// DTOs/StatusRequestDto.cs
 public class StatusRequestDto
 {
     public string Status { get; set; } = string.Empty;

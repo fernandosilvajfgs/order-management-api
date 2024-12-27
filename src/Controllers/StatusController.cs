@@ -1,4 +1,3 @@
-// Controllers/StatusController.cs
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 

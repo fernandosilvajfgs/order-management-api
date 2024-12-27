@@ -1,4 +1,3 @@
-// MappingProfiles/PedidoProfile.cs
 using AutoMapper;
 
 public class PedidoProfile : Profile

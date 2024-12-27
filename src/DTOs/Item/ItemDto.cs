@@ -1,4 +1,3 @@
-// DTOs/ItemDto.cs
 public class ItemDto
 {
     public string Descricao { get; set; } = string.Empty;

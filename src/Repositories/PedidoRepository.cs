@@ -8,6 +8,10 @@ public class PedidoRepository : IPedidoRepository
     {
         _context = context;
     }
+    public async Task<List<Pedido>> GetAllAsync()
+    {
+        return await _context.Pedidos.Include(p => p.Itens).ToListAsync();
+    }
 
     public async Task<Pedido?> GetByCodigoAsync(string codigo)
     {
