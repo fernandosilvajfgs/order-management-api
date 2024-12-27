@@ -43,19 +43,19 @@ public class StatusServiceTests
         // Arrange
         var pedidoDb = new Pedido
         {
-            Codigo = "ABC",
+            Codigo = "123",
             Itens = new List<Item>
             {
                 new Item { Descricao = "Item1", PrecoUnitario = 5, Qtd = 2 }
             }
         };
         _repoMock
-            .Setup(r => r.GetByCodigoAsync("ABC"))
+            .Setup(r => r.GetByCodigoAsync("123"))
             .ReturnsAsync(pedidoDb);
 
         var request = new StatusRequest
         {
-            Pedido = "ABC",
+            Pedido = "123",
             Status = "REPROVADO"
         };
 
@@ -75,19 +75,19 @@ public class StatusServiceTests
         // Arrange
         var pedidoDb = new Pedido
         {
-            Codigo = "XYZ",
+            Codigo = "123",
             Itens = new List<Item>
             {
                 new Item { Descricao = "Item1", PrecoUnitario = 10, Qtd = 2 }
             }
         };
         _repoMock
-            .Setup(r => r.GetByCodigoAsync("XYZ"))
+            .Setup(r => r.GetByCodigoAsync("123"))
             .ReturnsAsync(pedidoDb);
 
         var request = new StatusRequest
         {
-            Pedido = "XYZ",
+            Pedido = "123",
             Status = "APROVADO",
             ItensAprovados = 2,
             ValorAprovado = 20
@@ -108,19 +108,19 @@ public class StatusServiceTests
         // Arrange
         var pedidoDb = new Pedido
         {
-            Codigo = "XYZ",
+            Codigo = "123",
             Itens = new List<Item>
             {
                 new Item { Descricao = "Item1", PrecoUnitario = 10, Qtd = 2 }
             }
         };
         _repoMock
-            .Setup(r => r.GetByCodigoAsync("XYZ"))
+            .Setup(r => r.GetByCodigoAsync("123"))
             .ReturnsAsync(pedidoDb);
 
         var request = new StatusRequest
         {
-            Pedido = "XYZ",
+            Pedido = "123",
             Status = "APROVADO",
             ItensAprovados = 2,
             ValorAprovado = 15
@@ -140,19 +140,19 @@ public class StatusServiceTests
         // Arrange
         var pedidoDb = new Pedido
         {
-            Codigo = "XYZ",
+            Codigo = "123",
             Itens = new List<Item>
             {
                 new Item { Descricao = "Item1", PrecoUnitario = 10, Qtd = 2 }
             }
         };
         _repoMock
-            .Setup(r => r.GetByCodigoAsync("XYZ"))
+            .Setup(r => r.GetByCodigoAsync("123"))
             .ReturnsAsync(pedidoDb);
 
         var request = new StatusRequest
         {
-            Pedido = "XYZ",
+            Pedido = "123",
             Status = "APROVADO",
             ItensAprovados = 3,
             ValorAprovado = 20

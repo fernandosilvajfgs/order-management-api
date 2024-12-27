@@ -20,7 +20,7 @@ public class PedidoControllerIntegrationTests
         // Arrange
         var novoPedido = new CreatePedidoDto
         {
-            Codigo = "INT-001",
+            Codigo = "12345",
             Itens = new List<ItemDto>
             {
                 new ItemDto { Descricao = "Item A", PrecoUnitario = 10, Qtd = 1 },
@@ -38,7 +38,7 @@ public class PedidoControllerIntegrationTests
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
         var responseBody = await response.Content.ReadAsStringAsync();
 
-        Assert.Contains("INT-001", responseBody);
+        Assert.Contains("12345", responseBody);
     }
 
     [Fact]
@@ -62,7 +62,7 @@ public class PedidoControllerIntegrationTests
         // Arrange
         var pedido = new CreatePedidoDto
         {
-            Codigo = "DUP-001",
+            Codigo = "12345",
             Itens = new List<ItemDto>
             {
                 new ItemDto { Descricao = "Item A", PrecoUnitario = 10, Qtd = 1 }
