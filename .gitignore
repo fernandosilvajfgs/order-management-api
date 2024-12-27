@@ -1,0 +1,17 @@
+# .NET build artifacts
+bin/
+obj/
+*.exe
+*.dll
+*.pdb
+*.cache
+*.sourcelink.json
+*.log
+
+# Rider and Visual Studio files
+.vscode/
+.idea/
+*.user
+*.suo
+*.vcxproj.user
+*.dbmdl

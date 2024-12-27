@@ -1,0 +1,172 @@
+using Xunit;
+using Moq;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+
+public class StatusServiceTests
+{
+    private readonly StatusService _service;
+    private readonly Mock<IPedidoRepository> _repoMock;
+
+    public StatusServiceTests()
+    {
+        _repoMock = new Mock<IPedidoRepository>();
+        _service = new StatusService(_repoMock.Object);
+    }
+
+    [Fact]
+    public async Task ChangeStatusAsync_WhenPedidoNaoExiste_ReturnsCODIGO_PEDIDO_INVALIDO()
+    {
+        // Arrange
+        var request = new StatusRequest
+        {
+            Pedido = "NAO_EXISTE",
+            Status = "APROVADO",
+            ItensAprovados = 2,
+            ValorAprovado = 10
+        };
+
+        _repoMock
+            .Setup(r => r.GetByCodigoAsync("NAO_EXISTE"))
+            .ReturnsAsync((Pedido?)null);
+
+        // Act
+        var (success, message, statusList) = await _service.ChangeStatusAsync(request);
+
+        // Assert
+        Assert.False(success);
+        Assert.Equal("CODIGO_PEDIDO_INVALIDO", message);
+        Assert.Empty(statusList);
+    }
+
+    [Fact]
+    public async Task ChangeStatusAsync_WhenStatusReprovado_ReturnsReprovado()
+    {
+        // Arrange
+        var pedidoDb = new Pedido
+        {
+            Codigo = "ABC",
+            Itens = new List<Item>
+            {
+                new Item { Descricao = "Item1", PrecoUnitario = 5, Qtd = 2 }
+            }
+        };
+        _repoMock
+            .Setup(r => r.GetByCodigoAsync("ABC"))
+            .ReturnsAsync(pedidoDb);
+
+        var request = new StatusRequest
+        {
+            Pedido = "ABC",
+            Status = "REPROVADO"
+        };
+
+        // Act
+        var (success, message, statusList) = await _service.ChangeStatusAsync(request);
+
+        // Assert
+        Assert.True(success);
+        Assert.Null(message);
+        Assert.Single(statusList);
+        Assert.Contains("REPROVADO", statusList);
+    }
+
+    [Fact]
+    public async Task ChangeStatusAsync_WhenStatusAprovado_EverythingMatches_ReturnsAPROVADO()
+    {
+        // Arrange
+        var pedidoDb = new Pedido
+        {
+            Codigo = "XYZ",
+            Itens = new List<Item>
+            {
+                new Item { Descricao = "Item1", PrecoUnitario = 10, Qtd = 2 } // totalValue=20, totalItems=2
+            }
+        };
+        _repoMock
+            .Setup(r => r.GetByCodigoAsync("XYZ"))
+            .ReturnsAsync(pedidoDb);
+
+        var request = new StatusRequest
+        {
+            Pedido = "XYZ",
+            Status = "APROVADO",
+            ItensAprovados = 2,
+            ValorAprovado = 20
+        };
+
+        // Act
+        var (success, message, statusList) = await _service.ChangeStatusAsync(request);
+
+        // Assert
+        Assert.True(success);
+        Assert.Null(message);
+        Assert.Contains("APROVADO", statusList);
+    }
+
+    [Fact]
+    public async Task ChangeStatusAsync_WhenValorAprovado_MenorQueTotalValue_ReturnsAPROVADO_VALOR_A_MENOR()
+    {
+        // Arrange
+        var pedidoDb = new Pedido
+        {
+            Codigo = "XYZ",
+            Itens = new List<Item>
+            {
+                new Item { Descricao = "Item1", PrecoUnitario = 10, Qtd = 2 } // totalValue=20
+            }
+        };
+        _repoMock
+            .Setup(r => r.GetByCodigoAsync("XYZ"))
+            .ReturnsAsync(pedidoDb);
+
+        var request = new StatusRequest
+        {
+            Pedido = "XYZ",
+            Status = "APROVADO",
+            ItensAprovados = 2,
+            ValorAprovado = 15 // < 20
+        };
+
+        // Act
+        var (success, message, statusList) = await _service.ChangeStatusAsync(request);
+
+        // Assert
+        Assert.True(success);
+        Assert.Contains("APROVADO_VALOR_A_MENOR", statusList);
+    }
+
+    [Fact]
+    public async Task ChangeStatusAsync_WhenItensAprovados_MaiorQueTotal_ReturnsAPROVADO_QTD_A_MAIOR()
+    {
+        // Arrange
+        var pedidoDb = new Pedido
+        {
+            Codigo = "XYZ",
+            Itens = new List<Item>
+            {
+                new Item { Descricao = "Item1", PrecoUnitario = 10, Qtd = 2 } // totalItems=2
+            }
+        };
+        _repoMock
+            .Setup(r => r.GetByCodigoAsync("XYZ"))
+            .ReturnsAsync(pedidoDb);
+
+        var request = new StatusRequest
+        {
+            Pedido = "XYZ",
+            Status = "APROVADO",
+            ItensAprovados = 3, // > 2
+            ValorAprovado = 20
+        };
+
+        // Act
+        var (success, message, statusList) = await _service.ChangeStatusAsync(request);
+
+        // Assert
+        Assert.True(success);
+        Assert.Contains("APROVADO_QTD_A_MAIOR", statusList);
+    }
+}
