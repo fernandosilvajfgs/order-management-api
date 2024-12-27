@@ -19,7 +19,7 @@ public class PedidoController : ControllerBase
     {
         try
         {
-            var pedidos = await _pedidoService.GetAllAsync();
+            var pedidos = await _pedidoService.GetAllPedidosAsync();
             var pedidoDtos = _mapper.Map<List<PedidoResponseDto>>(pedidos);
             return Ok(pedidoDtos);
         }

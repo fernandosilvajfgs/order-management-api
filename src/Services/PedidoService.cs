@@ -7,9 +7,9 @@ public class PedidoService : IPedidoService
         _pedidoRepository = pedidoRepository;
     }
 
-    public async Task<List<Pedido>> GetAllAsync()
+    public async Task<List<Pedido>> GetAllPedidosAsync()
     {
-        return await _pedidoRepository.GetAllAsync();
+        return await _pedidoRepository.GetAllPedidosAsync();
     }
 
     public async Task<Pedido?> GetByCodigoAsync(string codigo)

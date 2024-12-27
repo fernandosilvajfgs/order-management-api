@@ -8,7 +8,7 @@ public class PedidoRepository : IPedidoRepository
     {
         _context = context;
     }
-    public async Task<List<Pedido>> GetAllAsync()
+    public async Task<List<Pedido>> GetAllPedidosAsync()
     {
         return await _context.Pedidos.Include(p => p.Itens).ToListAsync();
     }

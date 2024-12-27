@@ -13,7 +13,7 @@ public class PedidoServiceTests
     }
 
     [Fact]
-    public async Task GetAllAsync_ReturnsAllPedidos()
+    public async Task GetAllPedidosAsync_ReturnsAllPedidos()
     {
         // Arrange
         var pedidos = new List<Pedido>
@@ -23,11 +23,11 @@ public class PedidoServiceTests
     };
 
         _repoMock
-            .Setup(r => r.GetAllAsync())
+            .Setup(r => r.GetAllPedidosAsync())
             .ReturnsAsync(pedidos);
 
         // Act
-        var result = await _service.GetAllAsync();
+        var result = await _service.GetAllPedidosAsync();
 
         // Assert
         Assert.NotNull(result);
