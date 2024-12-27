@@ -134,7 +134,7 @@ The project uses .NET dependencies that must be restored before running the appl
 ## Running Tests
 The project includes unit and integration tests to validate functionality.
 
-1. Navigate to the test project folder:
+1. Navigate to the project folder to run both integration and unit tests or navigate into each test folder to run them individually:
    ```bash
    cd <test_project_folder>
    ```
